@@ -37,10 +37,8 @@ const cancelUpdateBtn = document.getElementById(
 
 let currentProductId: string | null = null;
 
-// Fetch products from the server and display them
 fetchProducts();
 
-// Add event listener for form submission
 productForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   const name = (document.getElementById("name") as HTMLInputElement).value;
@@ -54,9 +52,8 @@ productForm?.addEventListener("submit", (event) => {
     .value;
   const image = (document.getElementById("image") as HTMLInputElement).value;
 
-  // Create a new product object
   const newProduct: Product = {
-    id: "" + Date.now(), // Using timestamp as a temporary ID
+    id: "" + Date.now(),
     name,
     description,
     price,
@@ -64,7 +61,6 @@ productForm?.addEventListener("submit", (event) => {
     image,
   };
 
-  // Send a POST request to the server to create a new product
   fetch("http://localhost:3000/products", {
     method: "POST",
     headers: {
@@ -74,25 +70,20 @@ productForm?.addEventListener("submit", (event) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      // Clear the form inputs
       productForm.reset();
 
-      // Fetch and display the updated product list
       fetchProducts();
       console.log(newProduct);
     })
     .catch((error) => console.error("Error creating product:", error));
 });
 
-// Function to fetch and display the product list
 function fetchProduct() {
   fetch("http://localhost:3000/products")
     .then((response) => response.json())
     .then((data) => {
-      // Clear the product list
       productList.innerHTML = "";
 
-      // Iterate over the products and create product cards
       data.forEach((product: Product) => {
         const productCard = document.createElement("div");
         productCard.classList.add("product-card");
@@ -111,8 +102,8 @@ function fetchProduct() {
         productCard.appendChild(description);
 
         const price = document.createElement("p");
-        // Check if price is valid before calling toFixed()
-        price.textContent = `KSh${
+
+        price.textContent = `KSh{
           product.price ? product.price.toFixed(2) : "0.00"
         }`;
         price.classList.add("price");
@@ -122,7 +113,6 @@ function fetchProduct() {
         category.textContent = `Category: ${product.category}`;
         productCard.appendChild(category);
 
-        // Create buttons for Update and Delete
         const updateButton = document.createElement("button");
         updateButton.textContent = "Update";
         updateButton.addEventListener("click", () => showUpdateForm(product));
@@ -139,7 +129,6 @@ function fetchProduct() {
     .catch((error) => console.error("Error fetching products:", error));
 }
 
-// Function to show the update form
 function showUpdateForm(product: Product) {
   updateNameInput.value = product.name;
   updateDescriptionInput.value = product.description;
@@ -150,7 +139,6 @@ function showUpdateForm(product: Product) {
   updateForm.style.display = "block";
 }
 
-// Function to update a product
 function updateProduct() {
   const updatedProduct: Product = {
     id: currentProductId!,
@@ -169,7 +157,6 @@ function updateProduct() {
     body: JSON.stringify(updatedProduct),
   })
     .then(() => {
-      // Clear the update form inputs
       updateNameInput.value = "";
       updateDescriptionInput.value = "";
       updatePriceInput.value = "";
@@ -178,25 +165,21 @@ function updateProduct() {
       currentProductId = null;
       updateForm.style.display = "none";
 
-      // Fetch and display the updated product list
       fetchProducts();
     })
     .catch((error) => console.error("Error updating product:", error));
 }
 
-// Function to delete a product
 function deleteProduct(id: string) {
   fetch(`http://localhost:3000/products/${id}`, {
     method: "DELETE",
   })
     .then(() => {
-      // Fetch and display the updated product list
       fetchProducts();
     })
     .catch((error) => console.error("Error deleting product:", error));
 }
 
-// Add event listeners for update and cancel buttons
 updateProductBtn?.addEventListener("click", updateProduct);
 cancelUpdateBtn?.addEventListener("click", () => {
   updateNameInput.value = "";

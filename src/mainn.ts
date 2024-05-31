@@ -22,18 +22,14 @@ const closeCartBtn = document.getElementById(
 
 let cart: CartItem[] = [];
 
-// Fetch products from the server and display them
 fetchProducts();
 
-// Function to fetch and display the product list
 function fetchProducts() {
   fetch("http://localhost:3000/products")
     .then((response) => response.json())
     .then((data) => {
-      // Clear the product list
       productList.innerHTML = "";
 
-      // Iterate over the products and create product cards
       data.forEach((product: Product) => {
         const productCard = document.createElement("div");
         productCard.classList.add("product-card");
@@ -52,7 +48,7 @@ function fetchProducts() {
         productCard.appendChild(description);
 
         const price = document.createElement("p");
-        price.textContent = `$${product.price.toFixed(2)}`;
+        price.textContent = `Ksh. ${product.price.toFixed(2)}`;
         price.classList.add("price");
         productCard.appendChild(price);
 
@@ -71,7 +67,6 @@ function fetchProducts() {
     .catch((error) => console.error("Error fetching products:", error));
 }
 
-// Function to add a product to the cart
 function addToCart(product: Product) {
   const existingCartItem = cart.find((item) => item.id === product.id);
 
@@ -84,13 +79,11 @@ function addToCart(product: Product) {
   updateCartUI();
 }
 
-// Function to remove a product from the cart
 function removeFromCart(id: string) {
   cart = cart.filter((item) => item.id !== id);
   updateCartUI();
 }
 
-// Function to update the cart UI
 function updateCartUI() {
   cartItems.innerHTML = "";
   let totalPrice = 0;
@@ -112,11 +105,10 @@ function updateCartUI() {
 
   cartCount.textContent = cart.length.toString();
   cartTotalElements.forEach((element) => {
-    element.textContent = `Ksh${totalPrice.toFixed(2)}`;
+    element.textContent = `Ksh.${totalPrice.toFixed(2)}`;
   });
 }
 
-// Event listener for opening the cart
 const cartLink = document.querySelector("nav ul li:nth-child(2) a");
 
 if (cartLink) {
@@ -125,12 +117,10 @@ if (cartLink) {
   });
 }
 
-// Event listener for closing the cart
 closeCartBtn.addEventListener("click", () => {
   cartOverlay.style.display = "none";
 });
 
-// Add event listener for window load
 window.addEventListener("load", () => {
   const cartLink = document.querySelector("nav ul li:nth-child(2) a");
 
